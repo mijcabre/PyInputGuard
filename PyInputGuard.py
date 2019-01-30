@@ -1,7 +1,6 @@
 # TODO: add checking data directly(not using a prompt, example: x = enforceInt(someData))
 # TODO: add length/size checking to enforceInt, enforceFloat, enforceString, ...?
 # TODO: add precision checking to enforceFloat
-# TODO: add enforceComplex
 # TODO: add enforceByte
 # TODO: add enforceList
 # TODO: add enforceTuple
@@ -50,3 +49,11 @@ def enforceBool(prompt):
         return False
     else:
         return f'Input "{testInput}" cannot be converted to a boolean.'
+
+def enforceComplex(prompt):
+    testInput = input(prompt)
+    testInput = testInput.replace(" ", "")
+    try:
+        return complex(testInput)
+    except:
+        return f'Input "{testInput}" cannot be converted into a complex number.'
