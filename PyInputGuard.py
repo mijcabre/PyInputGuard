@@ -1,6 +1,4 @@
 # TODO: add checking data directly(not using a prompt, example: x = enforceInt(someData))
-
-
 # TODO: add length/size checking to enforceInt, enforceFloat, enforceString, ...?
 # TODO: add precision checking to enforceFloat
 # TODO: add enforceComplex
@@ -9,8 +7,10 @@
 # TODO: add enforceTuple
 # TODO: add enforceSet
 # TODO: add enforceDictionary
-# TODO: add documentation
+# TODO: add documentation for methods
+# TODO: add documentation in README
 # TODO: add hardcore enforcement functions (loops until user gives valid input)
+# TODO: add check for negative or positive numbers
 
 
 import re
@@ -38,7 +38,7 @@ def enforceStringFormat(prompt, regex = None):
         if bool(pattern.match(testInput)):
             return testInput
         else:
-            return f'Input "{testInput}" oes not fit the specified format'
+            return f'Input "{testInput}" does not fit the specified format.'
     else:
         return testInput
 
