@@ -1,11 +1,6 @@
 # TODO: add checking data directly(not using a prompt, example: x = enforceInt(someData))
 # TODO: add length/size checking to enforceInt, enforceFloat, enforceString, ...?
 # TODO: add precision checking to enforceFloat
-# TODO: add enforceByte
-# TODO: add enforceList
-# TODO: add enforceTuple
-# TODO: add enforceSet
-# TODO: add enforceDictionary
 # TODO: add documentation for methods
 # TODO: add documentation in README
 # TODO: add hardcore enforcement functions (loops until user gives valid input)

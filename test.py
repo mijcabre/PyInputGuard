@@ -1,4 +1,4 @@
-# use random values instead of hardcoded ones
+# TODO: use random values instead of hardcoded ones
 from PyInputGuard import *
 import unittest
 from unittest import mock
