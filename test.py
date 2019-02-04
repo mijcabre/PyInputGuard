@@ -77,9 +77,10 @@ class TestEnforceFunctions(unittest.TestCase):
 
     def test_enforceFloat(self):
         TEST_INT = 999
-        TEST_FLOAT = 9.99
+        TEST_FLOAT = 9.999
         MIN_VALUE = 1
         MAX_VALUE = 10
+        PRECISION = 2
         TEST_STRING = 'asdf'
         TEST_BOOL = True
         TEST_COMPLEX = '1 + 2j'
@@ -93,6 +94,12 @@ class TestEnforceFunctions(unittest.TestCase):
         # expect method to accept float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
             self.assertEqual(enforceFloat("Enter text: "), TEST_FLOAT)
+
+        # test float
+        # with precision
+        # expect method to convert float to correct precision
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(enforceFloat("Enter text: ", None, None, PRECISION), 9.99)
 
         # test float
         # with min value
