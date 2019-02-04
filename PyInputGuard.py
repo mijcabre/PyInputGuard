@@ -1,4 +1,3 @@
-# TODO: add precision checking to enforceFloat
 # TODO: add hardcore enforcement functions (loops until user gives valid input)
 # TODO: DRY/refactor code
 # TODO: add check to make sure maxValue > minValue && maxLength > minLength
@@ -31,8 +30,11 @@ def enforceInt(prompt, minValue = None, maxValue = None):
     except:
         return f'Input "{testInput}" cannot be converted into an integer.'
 
-def enforceFloat(prompt, minValue = None, maxValue = None):
+def enforceFloat(prompt, minValue = None, maxValue = None, precision = None):
     testInput = input(prompt)
+    if precision != None:
+        decimalLoc = testInput.find('.')
+        testInput = testInput[:decimalLoc+precision+1]
     try:
         testInput = float(testInput)
         if minValue and maxValue:
