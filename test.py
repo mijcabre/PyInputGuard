@@ -1,4 +1,6 @@
+# TODO: figure out a better way to test precision
 # TODO: use random values instead of hardcoded ones
+
 from PyInputGuard import *
 import unittest
 from unittest import mock
@@ -313,6 +315,144 @@ class TestEnforceFunctions(unittest.TestCase):
         # expect method to convert to complex
         with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
             self.assertEqual(enforceComplex("Enter text:"), complex(TEST_COMPLEX.replace(" ", "")))
+
+    def test_strictEnforceInt(self):
+        TEST_INT = 999
+        MIN_VALUE = 500
+        MAX_VALUE = 1000
+        # test int
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_INT)):
+            self.assertEqual(strictEnforceInt("Enter text: "), TEST_INT)
+
+        # test int
+        # with min value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_INT)):
+            self.assertEqual(strictEnforceInt("Enter text: ", MIN_VALUE), TEST_INT)
+
+        # test int
+        # with max value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_INT)):
+            self.assertEqual(strictEnforceInt("Enter text: ", None, MAX_VALUE), TEST_INT)
+
+        # test int
+        # with min and max value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_INT)):
+            self.assertEqual(strictEnforceInt("Enter text: ", MIN_VALUE, MAX_VALUE), TEST_INT)
+
+    def test_strictEnforceFloat(self):
+        TEST_FLOAT = 9.999
+        MIN_VALUE = 1
+        MAX_VALUE = 10
+        PRECISION = 2
+
+        # test float
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(strictEnforceFloat("Enter text: "), TEST_FLOAT)
+
+        # test float
+        # with min value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(strictEnforceFloat("Enter text: ", MIN_VALUE), TEST_FLOAT)
+
+        # test float
+        # with max value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(strictEnforceFloat("Enter text: ", None, MAX_VALUE), TEST_FLOAT)
+
+        # test float
+        # with min and max value
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(strictEnforceFloat("Enter text: ", MIN_VALUE, MAX_VALUE), TEST_FLOAT)
+
+        # test float
+        # with precision
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(strictEnforceFloat("Enter text: ", None, None, PRECISION), 9.99)
+
+    def test_strictEnforceStringFormat(self):
+        TEST_STRING = 'hello3'
+        TEST_REGEX = 'hello[1-9]+'
+        MIN_LENGTH = 2
+        MAX_LENGTH = 10
+
+        # test string
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: "), TEST_STRING)
+
+        # test string
+        # with regex
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", TEST_REGEX), TEST_STRING)
+
+        # test string
+        # with min length
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, MIN_LENGTH), TEST_STRING)
+
+        # test string
+        # with max length
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, None, MAX_LENGTH), TEST_STRING)
+
+        # test string
+        # with min and max length
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, MIN_LENGTH, MAX_LENGTH), TEST_STRING)
+
+        # test string
+        # with min, max, regex
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_STRING)):
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", TEST_REGEX, MIN_LENGTH, MAX_LENGTH), TEST_STRING)
+
+    def test_strictEnforceBool(self):
+        TEST_True = "True"
+        TEST_true = "true"
+        TEST_False = "False"
+        TEST_false = "false"
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_True)):
+            self.assertEqual(strictEnforceBool("Enter text: "), True)
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_true)):
+            self.assertEqual(strictEnforceBool("Enter text: "), True)
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_False)):
+            self.assertEqual(strictEnforceBool("Enter text: "), False)
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_false)):
+            self.assertEqual(strictEnforceBool("Enter text: "), False)
+
+    def test_strictEnforceComplex(self):
+        TEST_COMPLEX = '( 4 + 5j)'
+        RESULT_COMPLEX = complex(4+5j)
+
+        # test complex
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
+            self.assertEqual(strictEnforceComplex("Enter text: "), RESULT_COMPLEX)
 
 if __name__ == "__main__":
     unittest.main()
