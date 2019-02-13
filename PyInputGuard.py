@@ -1,5 +1,6 @@
-# TODO: add hardcore enforcement functions (loops until user gives valid input)
-# TODO: DRY/refactor code
+# TODO: fix float precision bug -> repeat by enforcing precision of 2, but give it 3 digits before decimal
+# TODO: add enforceYesNo
+# TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool)
 # TODO: add check to make sure maxValue > minValue && maxLength > minLength
 # TODO: add documentation for methods
 # TODO: add documentation in README
@@ -102,3 +103,48 @@ def enforceComplex(prompt):
         return complex(testInput)
     except:
         return f'Input "{testInput}" cannot be converted into a complex number.'
+
+def strictEnforceInt(prompt, minValue=None, maxValue=None):
+    while(True):
+        possibleInt = enforceInt(prompt, minValue, maxValue)
+        if isinstance(possibleInt, int):
+            break
+        else:
+            print(possibleInt + ' Try again.')
+    return possibleInt
+
+def strictEnforceFloat(prompt, minValue=None, maxValue=None, precision = None):
+    while(True):
+        possibleFloat = enforceFloat(prompt, minValue, maxValue, precision)
+        if isinstance(possibleFloat, float):
+            break
+        else:
+            print(possibleFloat + ' Try again.')
+    return possibleFloat
+
+def strictEnforceStringFormat(prompt, regex=None, minLength=None, maxLength=None):
+    while(True):
+        possibleStringFormat = enforceStringFormat(prompt, regex, minLength, maxLength)
+        if 'Input' not in possibleStringFormat:
+            break
+        else:
+            print(possibleStringFormat + ' Try again.')
+    return possibleStringFormat
+
+def strictEnforceBool(prompt):
+    while(True):
+        possibleBool = enforceBool(prompt)
+        if isinstance(possibleBool, bool):
+            break
+        else:
+            print(possibleBool + ' Try again.')
+    return possibleBool
+
+def strictEnforceComplex(prompt):
+    while(True):
+        possibleComplex = enforceComplex(prompt)
+        if isinstance(possibleComplex, complex):
+            break
+        else:
+            print(possibleComplex + ' Try again.')
+    return possibleComplex
