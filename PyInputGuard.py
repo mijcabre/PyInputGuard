@@ -1,4 +1,4 @@
-# TODO: fix float precision bug -> repeat by enforcing precision of 2, but give it 3 digits before decimal
+# TODO: add rounding option to float
 # TODO: add enforceYesNo
 # TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool)
 # TODO: add check to make sure maxValue > minValue && maxLength > minLength
