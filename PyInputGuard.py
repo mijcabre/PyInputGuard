@@ -1,6 +1,4 @@
-# TODO: add rounding option to float
-# TODO: add enforceYesNo
-# TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool)
+# TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool && enforceYesNo)
 # TODO: add check to make sure maxValue > minValue && maxLength > minLength
 # TODO: add documentation for methods
 # TODO: add documentation in README
@@ -96,6 +94,15 @@ def enforceBool(prompt):
     else:
         return f'Input "{testInput}" cannot be converted to a boolean.'
 
+def enforceYesNo(prompt):
+    testInput = input(prompt)
+    if testInput == 'Yes' or testInput == 'yes':
+        return True
+    elif testInput == 'No' or testInput == 'no':
+        return False
+    else:
+        return f'Input "{testInput}" cannot be converted into a YesNo.'
+
 def enforceComplex(prompt):
     testInput = input(prompt)
     testInput = testInput.replace(" ", "")
@@ -139,6 +146,16 @@ def strictEnforceBool(prompt):
         else:
             print(possibleBool + ' Try again.')
     return possibleBool
+
+
+def strictEnforceYesNo(prompt):
+    while(True):
+        possibleYesNo = enforceYesNo(prompt)
+        if isinstance(possibleYesNo, bool):
+            break
+        else:
+            print(possibleYesNo + ' Try again.')
+    return possibleYesNo
 
 def strictEnforceComplex(prompt):
     while(True):
