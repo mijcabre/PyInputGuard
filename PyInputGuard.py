@@ -1,4 +1,3 @@
-# TODO: add rounding option to float
 # TODO: add enforceYesNo
 # TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool)
 # TODO: add check to make sure maxValue > minValue && maxLength > minLength
@@ -33,11 +32,10 @@ def enforceInt(prompt, minValue = None, maxValue = None):
 
 def enforceFloat(prompt, minValue = None, maxValue = None, precision = None):
     testInput = input(prompt)
-    if precision != None:
-        decimalLoc = testInput.find('.')
-        testInput = testInput[:decimalLoc+precision+1]
     try:
         testInput = float(testInput)
+        if precision != None:
+            testInput = round(testInput, precision)
         if minValue and maxValue:
             if testInput >= minValue and testInput <= maxValue:
                 return testInput

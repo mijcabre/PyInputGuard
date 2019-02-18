@@ -1,4 +1,3 @@
-# TODO: figure out a better way to test precision
 # TODO: use random values instead of hardcoded ones
 
 from PyInputGuard import *
@@ -101,7 +100,7 @@ class TestEnforceFunctions(unittest.TestCase):
         # with precision
         # expect method to convert float to correct precision
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", None, None, PRECISION), 9.99)
+            self.assertEqual(enforceFloat("Enter text: ", None, None, PRECISION), round(TEST_FLOAT, PRECISION))
 
         # test float
         # with min value
@@ -376,7 +375,7 @@ class TestEnforceFunctions(unittest.TestCase):
         # with precision
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(strictEnforceFloat("Enter text: ", None, None, PRECISION), 9.99)
+            self.assertEqual(strictEnforceFloat("Enter text: ", None, None, PRECISION), round(TEST_FLOAT, PRECISION))
 
     def test_strictEnforceStringFormat(self):
         TEST_STRING = 'hello3'
