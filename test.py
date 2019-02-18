@@ -138,9 +138,6 @@ class TestEnforceFunctions(unittest.TestCase):
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT * -1)):
             self.assertEqual(enforceFloat("Enter text: ", MIN_VALUE, MAX_VALUE), f'Input "{TEST_FLOAT * -1}" must be between {MIN_VALUE - 1} and {MAX_VALUE + 1}.')
 
-        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", None, None, PRECISION), round(TEST_FLOAT, PRECISION))
-
         # test string
         # expect method to fail to convert string to float
         with mock.patch('builtins.input', return_value=TEST_STRING):
