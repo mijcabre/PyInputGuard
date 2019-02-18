@@ -1,4 +1,3 @@
-# TODO: figure out a better way to test precision
 # TODO: use random values instead of hardcoded ones
 
 from PyInputGuard import *
@@ -316,6 +315,45 @@ class TestEnforceFunctions(unittest.TestCase):
         with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
             self.assertEqual(enforceComplex("Enter text:"), complex(TEST_COMPLEX.replace(" ", "")))
 
+    def test_enforceYesNo(self):
+        TEST_INT = 999
+        TEST_FLOAT = 9.99
+        TEST_STRING = 'asdf'
+        TEST_YESNO_YES = 'Yes'
+        TEST_YESNO_NO = 'No'
+        TEST_COMPLEX = '1 + 2j'
+
+        # test int
+        # expect method to reject int as bool
+        with mock.patch('builtins.input', return_value=str(TEST_INT)):
+            self.assertEqual(enforceYesNo("Enter text: "),  f'Input "{TEST_INT}" cannot be converted into a YesNo.')
+
+        # test float
+        # expect method to reject float as bool
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
+            self.assertEqual(enforceYesNo("Enter text: "),  f'Input "{TEST_FLOAT}" cannot be converted into a YesNo.')
+
+        # test string
+        # without format
+        # expect method to reject string as bool
+        with mock.patch('builtins.input', return_value=TEST_STRING):
+            self.assertEqual(enforceYesNo("Enter text: "),  f'Input "{TEST_STRING}" cannot be converted into a YesNo.')
+
+        # test bool True
+        # expect method to accept bool True
+        with mock.patch('builtins.input', return_value=str(TEST_YESNO_YES)):
+            self.assertEqual(enforceYesNo("Enter text: "), True)
+
+        # test bool True
+        # expect method to accept bool True
+        with mock.patch('builtins.input', return_value=str(TEST_YESNO_NO)):
+            self.assertEqual(enforceYesNo("Enter text: "), False)
+
+        # test complex
+        # expect method to reject complex
+        with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
+            self.assertEqual(enforceYesNo("Enter text: "), f'Input "{TEST_COMPLEX}" cannot be converted into a YesNo.')
+
     def test_strictEnforceInt(self):
         TEST_INT = 999
         MIN_VALUE = 500
@@ -453,6 +491,20 @@ class TestEnforceFunctions(unittest.TestCase):
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
             self.assertEqual(strictEnforceComplex("Enter text: "), RESULT_COMPLEX)
+
+    def test_strictEnforceBool(self):
+        TEST_YES = "Yes"
+        TEST_NO = "No"
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_YES)):
+            self.assertEqual(strictEnforceYesNo("Enter text: "), True)
+
+        # test bool
+        # expect accept
+        with mock.patch('builtins.input', return_value=str(TEST_NO)):
+            self.assertEqual(strictEnforceYesNo("Enter text: "), False)
 
 if __name__ == "__main__":
     unittest.main()
