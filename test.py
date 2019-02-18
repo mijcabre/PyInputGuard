@@ -339,12 +339,12 @@ class TestEnforceFunctions(unittest.TestCase):
         with mock.patch('builtins.input', return_value=TEST_STRING):
             self.assertEqual(enforceYesNo("Enter text: "),  f'Input "{TEST_STRING}" cannot be converted into a YesNo.')
 
-        # test bool True
+        # test YesNo Yes
         # expect method to accept bool True
         with mock.patch('builtins.input', return_value=str(TEST_YESNO_YES)):
             self.assertEqual(enforceYesNo("Enter text: "), True)
 
-        # test bool True
+        # test YesNo No
         # expect method to accept bool True
         with mock.patch('builtins.input', return_value=str(TEST_YESNO_NO)):
             self.assertEqual(enforceYesNo("Enter text: "), False)
@@ -492,16 +492,16 @@ class TestEnforceFunctions(unittest.TestCase):
         with mock.patch('builtins.input', return_value=str(TEST_COMPLEX)):
             self.assertEqual(strictEnforceComplex("Enter text: "), RESULT_COMPLEX)
 
-    def test_strictEnforceBool(self):
+    def test_strictEnforceYesNo(self):
         TEST_YES = "Yes"
         TEST_NO = "No"
 
-        # test bool
+        # test Yes
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_YES)):
             self.assertEqual(strictEnforceYesNo("Enter text: "), True)
 
-        # test bool
+        # test No
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_NO)):
             self.assertEqual(strictEnforceYesNo("Enter text: "), False)
