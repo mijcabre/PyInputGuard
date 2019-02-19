@@ -145,7 +145,7 @@ def enforceComplex(prompt):
     except:
         return f'Input "{testInput}" cannot be converted into a complex number'
 
-def strictEnforceInt(prompt, minValue=None, maxValue=None):
+def strictEnforceInt(prompt, minValue = None, maxValue = None):
     """
     Enforces an integer at a prompt. Loops until valid input given
     Args:
@@ -164,7 +164,7 @@ def strictEnforceInt(prompt, minValue=None, maxValue=None):
             print(possibleInt + ' Try again')
     return possibleInt
 
-def strictEnforceFloat(prompt, minValue=None, maxValue=None, precision = None):
+def strictEnforceFloat(prompt, minValue = None, maxValue = None, precision = None):
     """
     Enforces a float at a prompt. Loops until valid input given
     Args:
@@ -184,7 +184,7 @@ def strictEnforceFloat(prompt, minValue=None, maxValue=None, precision = None):
             print(possibleFloat + ' Try again')
     return possibleFloat
 
-def strictEnforceStringFormat(prompt, regex=None, minLength=None, maxLength=None):
+def strictEnforceStringFormat(prompt, regex = None, minLength = None, maxLength = None):
     """
     Enforces a string at a prompt. Loops until valid input given
     Args:
