@@ -1,33 +1,52 @@
-# TODO: DRY/refactor code (minMaxValue, Use arrays for enforceBool && enforceYesNo)
-# TODO: add check to make sure maxValue > minValue && maxLength > minLength
 # TODO: add documentation for methods
 # TODO: add documentation in README
 
 import re
 
+def sizeCheck(testInput, minSize, maxSize):
+    if isinstance(testInput, str):
+        testInputSize = len(testInput)
+    else:
+        testInputSize = testInput
+    if minSize and maxSize:
+        if minSize >= maxSize:
+            return_str = f'minSize {minSize} cannot be greater than or equal to maxSize {maxSize}'
+            if isinstance(testInput, str):
+                return_str += ' characters long'
+            return return_str
+        elif testInputSize >= minSize and testInputSize <= maxSize:
+            return testInput
+        else:
+            return_str = f'Input "{testInput}" must be between {minSize - 1} and {maxSize + 1}'
+            if isinstance(testInput, str):
+                return_str += ' characters long'
+            return return_str
+    elif minSize:
+        if testInputSize >= minSize:
+            return testInput
+        else:
+            return_str = f'Input "{testInput}" is too small. Input must be at least {minSize}'
+            if isinstance(testInput, str):
+                return_str += ' characters long'
+            return return_str
+    elif maxSize:
+        if testInputSize <= maxSize:
+            return testInput
+        else:
+            return_str = f'Input "{testInput}" is too large. Input must be less than {maxSize + 1}'
+            if isinstance(testInput, str):
+                return_str += ' characters long'
+            return return_str
+    else:
+        return testInput
+
 def enforceInt(prompt, minValue = None, maxValue = None):
     testInput = input(prompt)
     try:
         testInput = int(testInput)
-        if minValue and maxValue:
-            if testInput >= minValue and testInput <= maxValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" must be between {minValue - 1} and {maxValue + 1}.'
-        elif minValue:
-            if testInput >= minValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too small. Input must be at least {minValue}.'
-        elif maxValue:
-            if testInput <= maxValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too large. Input must be less than {maxValue + 1}.'
-        else:
-            return testInput
+        return sizeCheck(testInput, minValue, maxValue)
     except:
-        return f'Input "{testInput}" cannot be converted into an integer.'
+        return f'Input "{testInput}" cannot be converted into an integer'
 
 def enforceFloat(prompt, minValue = None, maxValue = None, precision = None):
     testInput = input(prompt)
@@ -35,26 +54,9 @@ def enforceFloat(prompt, minValue = None, maxValue = None, precision = None):
         testInput = float(testInput)
         if precision != None:
             testInput = round(testInput, precision)
-        if minValue and maxValue:
-            if testInput >= minValue and testInput <= maxValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" must be between {minValue - 1} and {maxValue + 1}.'
-        elif minValue:
-            if testInput >= minValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too small. Input must be at least {minValue}.'
-        elif maxValue:
-            if testInput <= maxValue:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too large. Input must be less than {maxValue + 1}.'
-        else:
-            return testInput
-        return testInput
+        return sizeCheck(testInput, minValue, maxValue)
     except:
-        return f'Input "{testInput}" cannot be converted into a float.'
+        return f'Input "{testInput}" cannot be converted into a float'
 
 def enforceStringFormat(prompt,  regex = None, minLength = None, maxLength = None):
     testInput = input(prompt)
@@ -63,44 +65,18 @@ def enforceStringFormat(prompt,  regex = None, minLength = None, maxLength = Non
         if bool(pattern.match(testInput)):
             return testInput
         else:
-           return f'Input "{testInput}" does not fit the specified format.'
+           return f'Input "{testInput}" does not fit the specified regular expression'
     else:
-        testInputLength = len(testInput)
-        if minLength and maxLength:
-            if testInputLength >= minLength and testInputLength <= maxLength:
-                return testInput
-            else:
-                return f'Input "{testInput}" must be between {minLength - 1} and {maxLength + 1} characters long.'
-        elif minLength:
-            if testInputLength >= minLength:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too small. Input must be at least {minLength} characters long.'
-        elif maxLength:
-            if testInputLength <= maxLength:
-                return testInput
-            else:
-                return f'Input "{testInput}" is too large. Input must be less than {maxLength + 1} characters long.'
-        else:
-            return testInput
+        return sizeCheck(testInput, minLength, maxLength)
 
 def enforceBool(prompt):
     testInput = input(prompt)
-    if testInput == 'True' or testInput == 'true':
+    if testInput in ['true', 'True', 'TRUE', 'Yes', 'yes', 'YES']:
         return True
-    elif testInput == 'False' or testInput == 'false':
+    elif testInput in ['false', 'False', 'FALSE', 'No', 'no', 'NO']:
         return False
     else:
-        return f'Input "{testInput}" cannot be converted to a boolean.'
-
-def enforceYesNo(prompt):
-    testInput = input(prompt)
-    if testInput == 'Yes' or testInput == 'yes':
-        return True
-    elif testInput == 'No' or testInput == 'no':
-        return False
-    else:
-        return f'Input "{testInput}" cannot be converted into a YesNo.'
+        return f'Input "{testInput}" cannot be converted to a boolean'
 
 def enforceComplex(prompt):
     testInput = input(prompt)
@@ -108,7 +84,7 @@ def enforceComplex(prompt):
     try:
         return complex(testInput)
     except:
-        return f'Input "{testInput}" cannot be converted into a complex number.'
+        return f'Input "{testInput}" cannot be converted into a complex number'
 
 def strictEnforceInt(prompt, minValue=None, maxValue=None):
     while(True):
@@ -116,7 +92,7 @@ def strictEnforceInt(prompt, minValue=None, maxValue=None):
         if isinstance(possibleInt, int):
             break
         else:
-            print(possibleInt + ' Try again.')
+            print(possibleInt + ' Try again')
     return possibleInt
 
 def strictEnforceFloat(prompt, minValue=None, maxValue=None, precision = None):
@@ -125,7 +101,7 @@ def strictEnforceFloat(prompt, minValue=None, maxValue=None, precision = None):
         if isinstance(possibleFloat, float):
             break
         else:
-            print(possibleFloat + ' Try again.')
+            print(possibleFloat + ' Try again')
     return possibleFloat
 
 def strictEnforceStringFormat(prompt, regex=None, minLength=None, maxLength=None):
@@ -134,7 +110,7 @@ def strictEnforceStringFormat(prompt, regex=None, minLength=None, maxLength=None
         if 'Input' not in possibleStringFormat:
             break
         else:
-            print(possibleStringFormat + ' Try again.')
+            print(possibleStringFormat + ' Try again')
     return possibleStringFormat
 
 def strictEnforceBool(prompt):
@@ -143,18 +119,8 @@ def strictEnforceBool(prompt):
         if isinstance(possibleBool, bool):
             break
         else:
-            print(possibleBool + ' Try again.')
+            print(possibleBool + ' Try again')
     return possibleBool
-
-
-def strictEnforceYesNo(prompt):
-    while(True):
-        possibleYesNo = enforceYesNo(prompt)
-        if isinstance(possibleYesNo, bool):
-            break
-        else:
-            print(possibleYesNo + ' Try again.')
-    return possibleYesNo
 
 def strictEnforceComplex(prompt):
     while(True):
@@ -162,5 +128,5 @@ def strictEnforceComplex(prompt):
         if isinstance(possibleComplex, complex):
             break
         else:
-            print(possibleComplex + ' Try again.')
+            print(possibleComplex + ' Try again')
     return possibleComplex
