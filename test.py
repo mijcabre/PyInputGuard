@@ -1,17 +1,17 @@
-# TODO: use random values instead of hardcoded ones
-
 from PyInputGuard import *
+import random
+import string
 import unittest
 from unittest import mock
 
 class TestEnforceFunctions(unittest.TestCase):
 
     def test_sizeCheck(self):
-        TEST_INT = 9
-        TEST_FLOAT = 9.99
-        TEST_STRING = 'asdf'
-        TEST_MIN_SIZE = 2
-        TEST_MAX_SIZE = 10
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
 
         # test valid int
         # with min and max size correct
@@ -23,6 +23,7 @@ class TestEnforceFunctions(unittest.TestCase):
         # expect method to return error
         self.assertEqual(sizeCheck(TEST_INT * 1000, TEST_MIN_SIZE, TEST_MAX_SIZE), f'Input "{TEST_INT * 1000}" must be between "{TEST_MIN_SIZE - 1}" and "{TEST_MAX_SIZE + 1}"')
 
+        # self.assertEqual(sizeCheck(TEST_INT * 1000, TEST_MIN_SIZE, TEST_MAX_SIZE), f'Input "{TEST_INT * 1000}" is too large. Input must be less than "{TEST_MAX_SIZE + 1}"')
         # test valid int
         # with min and max size flipped
         # expect method to return error
@@ -120,13 +121,13 @@ class TestEnforceFunctions(unittest.TestCase):
 
 
     def test_enforceInt(self):
-        TEST_INT = 999
-        MIN_VALUE = 1
-        MAX_VALUE = 10
-        TEST_FLOAT = 9.99
-        TEST_STRING = 'asdf'
+        TEST_INT = random.randint(1, 10)
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
         TEST_BOOL = True
-        TEST_COMPLEX = '1 + 2j'
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
 
         # test int
         # expect method to accept int
@@ -142,8 +143,8 @@ class TestEnforceFunctions(unittest.TestCase):
         # test int
         # with max value
         # expect method to fail int
-        with mock.patch('builtins.input', return_value=str(TEST_INT)):
-            self.assertEqual(enforceInt("Enter text: ", None, 10), f'Input "{TEST_INT}" is too large. Input must be less than "{MAX_VALUE + 1}"')
+        with mock.patch('builtins.input', return_value=str(TEST_INT * 1000)):
+            self.assertEqual(enforceInt("Enter text: ", None, TEST_MAX_SIZE), f'Input "{TEST_INT * 1000}" is too large. Input must be less than "{TEST_MAX_SIZE + 1}"')
 
         # test int
         # with min value
@@ -155,19 +156,13 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min value
         # expect method to fail int
         with mock.patch('builtins.input', return_value=str(TEST_INT * -1)):
-            self.assertEqual(enforceInt("Enter text: ", 1), f'Input "{TEST_INT * -1}" is too small. Input must be at least "{MIN_VALUE}"')
+            self.assertEqual(enforceInt("Enter text: ", TEST_MIN_SIZE), f'Input "{TEST_INT * -1}" is too small. Input must be at least "{TEST_MIN_SIZE}"')
 
         # test int
         # with min and max value
         # expect method to pass int
-        with mock.patch('builtins.input', return_value=str(TEST_INT)[0]):
-            self.assertEqual(enforceInt("Enter text: ", 1, 10), int(str(TEST_INT)[0]))
-
-        # test int
-        # with min and max value
-        # expect method to fail int
         with mock.patch('builtins.input', return_value=str(TEST_INT)):
-            self.assertEqual(enforceInt("Enter text: ", 1, 10), f'Input "{TEST_INT}" must be between "{MIN_VALUE - 1}" and "{MAX_VALUE + 1}"')
+            self.assertEqual(enforceInt("Enter text: ", TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_INT)
 
         # test float
         # expect method to fail to convert float
@@ -190,14 +185,14 @@ class TestEnforceFunctions(unittest.TestCase):
             self.assertEqual(enforceInt("Enter text: "), f'Input "{TEST_COMPLEX}" cannot be converted into an integer')
 
     def test_enforceFloat(self):
-        TEST_INT = 999
-        TEST_FLOAT = 9.999
-        MIN_VALUE = 1
-        MAX_VALUE = 10
-        PRECISION = 2
-        TEST_STRING = 'asdf'
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
+        PRECISION = random.randint(1, 10)
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
         TEST_BOOL = True
-        TEST_COMPLEX = '1 + 2j'
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
 
         # test int
         # expect method to accept int but convert to float
@@ -219,43 +214,43 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min value
         # expect method to accept float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", MIN_VALUE), TEST_FLOAT)
+            self.assertEqual(enforceFloat("Enter text: ", TEST_MIN_SIZE), TEST_FLOAT)
 
         # test float
         # with min value
         # expect method to reject float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT * -1)):
-            self.assertEqual(enforceFloat("Enter text: ", MIN_VALUE), f'Input "{TEST_FLOAT * -1}" is too small. Input must be at least "{MIN_VALUE}"')
+            self.assertEqual(enforceFloat("Enter text: ", TEST_MIN_SIZE), f'Input "{TEST_FLOAT * -1}" is too small. Input must be at least "{TEST_MIN_SIZE}"')
 
         # test float
         # with max value
         # expect method to accept float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", None, MAX_VALUE), TEST_FLOAT)
+            self.assertEqual(enforceFloat("Enter text: ", None, TEST_MAX_SIZE), TEST_FLOAT)
 
         # test float
         # with max value
         # expect method to reject float
-        with mock.patch('builtins.input', return_value=str(TEST_FLOAT * 10)):
-            self.assertEqual(enforceFloat("Enter text: ", None, MAX_VALUE), f'Input "{TEST_FLOAT * 10}" is too large. Input must be less than "{MAX_VALUE + 1}"')
+        with mock.patch('builtins.input', return_value=str(TEST_FLOAT * 1000)):
+            self.assertEqual(enforceFloat("Enter text: ", None, TEST_MAX_SIZE), f'Input "{TEST_FLOAT * 1000}" is too large. Input must be less than "{TEST_MAX_SIZE + 1}"')
 
         # test float
         # with min and max value
         # expect method to accept float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", MIN_VALUE, MAX_VALUE), TEST_FLOAT)
+            self.assertEqual(enforceFloat("Enter text: ", TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_FLOAT)
 
         # test float
         # with min and max value
         # expect method to reject float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT * -1)):
-            self.assertEqual(enforceFloat("Enter text: ", MIN_VALUE, MAX_VALUE), f'Input "{TEST_FLOAT * -1}" must be between "{MIN_VALUE - 1}" and "{MAX_VALUE + 1}"')
+            self.assertEqual(enforceFloat("Enter text: ", TEST_MIN_SIZE, TEST_MAX_SIZE), f'Input "{TEST_FLOAT * -1}" must be between "{TEST_MIN_SIZE - 1}" and "{TEST_MAX_SIZE + 1}"')
 
         # test float
         # with min and max value flipped
         # expect method to reject float
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(enforceFloat("Enter text: ", MAX_VALUE, MIN_VALUE), f'minSize "{MAX_VALUE}" cannot be greater than or equal to maxSize "{MIN_VALUE}"')
+            self.assertEqual(enforceFloat("Enter text: ", TEST_MAX_SIZE, TEST_MIN_SIZE), f'minSize "{TEST_MAX_SIZE}" cannot be greater than or equal to maxSize "{TEST_MIN_SIZE}"')
 
         # test string
         # expect method to fail to convert string to float
@@ -273,14 +268,14 @@ class TestEnforceFunctions(unittest.TestCase):
             self.assertEqual(enforceFloat("Enter text: "), f'Input "{TEST_COMPLEX}" cannot be converted into a float')
 
     def test_enforceStringFormat(self):
-        TEST_INT = 999
-        TEST_FLOAT = 9.99
-        TEST_STRING = 'asdf'
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
         TEST_STRING_FORMATTED = 'hello1'
-        MIN_LENGTH = 4
-        MAX_LENGTH = 10
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
         TEST_BOOL = True
-        TEST_COMPLEX = '1 + 2j'
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
 
         # test int
         # expect method to accept int as string
@@ -303,49 +298,49 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min length
         # expect method to accept string
         with mock.patch('builtins.input', return_value=TEST_STRING):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, MIN_LENGTH), TEST_STRING)
+            self.assertEqual(enforceStringFormat("Enter text: ", None, TEST_MIN_SIZE), TEST_STRING)
 
         # test string
         # without format
         # with min length
         # expect method to reject string
-        with mock.patch('builtins.input', return_value=TEST_STRING[:2]):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, MIN_LENGTH), f'Input "{TEST_STRING[:2]}" is too small. Input must be at least "{MIN_LENGTH}" characters long')
+        with mock.patch('builtins.input', return_value= TEST_STRING * 0):
+            self.assertEqual(enforceStringFormat("Enter text: ", None, TEST_MIN_SIZE), f'Input "{TEST_STRING * 0}" is too small. Input must be at least "{TEST_MIN_SIZE}" characters long')
 
         # test string
         # without format
         # with max length
         # expect method to accept string
         with mock.patch('builtins.input', return_value=TEST_STRING):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, None, MAX_LENGTH), TEST_STRING)
+            self.assertEqual(enforceStringFormat("Enter text: ", None, None, TEST_MAX_SIZE), TEST_STRING)
 
         # test string
         # without format
         # with max length
         # expect method to reject string
-        with mock.patch('builtins.input', return_value=TEST_STRING * 10):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, None, MAX_LENGTH), f'Input "{TEST_STRING * 10}" is too large. Input must be less than "{MAX_LENGTH + 1}" characters long')
+        with mock.patch('builtins.input', return_value=TEST_STRING * 1000):
+            self.assertEqual(enforceStringFormat("Enter text: ", None, None, TEST_MAX_SIZE), f'Input "{TEST_STRING * 1000}" is too large. Input must be less than "{TEST_MAX_SIZE + 1}" characters long')
 
         # test string
         # without format
         # with min and max length
         # expect method to accept string
         with mock.patch('builtins.input', return_value=TEST_STRING):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, MIN_LENGTH, MAX_LENGTH), TEST_STRING)
+            self.assertEqual(enforceStringFormat("Enter text: ", None, TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_STRING)
 
         # test string
         # without format
         # with min and max length
         # expect method to reject string
-        with mock.patch('builtins.input', return_value=TEST_STRING * 10):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, MIN_LENGTH, MAX_LENGTH), f'Input "{TEST_STRING * 10}" must be between "{MIN_LENGTH - 1}" and "{MAX_LENGTH + 1}" characters long')
+        with mock.patch('builtins.input', return_value=TEST_STRING * 1000):
+            self.assertEqual(enforceStringFormat("Enter text: ", None, TEST_MIN_SIZE, TEST_MAX_SIZE), f'Input "{TEST_STRING * 1000}" must be between "{TEST_MIN_SIZE - 1}" and "{TEST_MAX_SIZE + 1}" characters long')
 
         # test string
         # without format
         # with min and max length flipped
         # expect method to reject string
-        with mock.patch('builtins.input', return_value=TEST_STRING * 10):
-            self.assertEqual(enforceStringFormat("Enter text: ", None, MAX_LENGTH, MIN_LENGTH), f'minSize "{MAX_LENGTH}" cannot be greater than or equal to maxSize "{MIN_LENGTH}" characters long')
+        with mock.patch('builtins.input', return_value=TEST_STRING * 1000):
+            self.assertEqual(enforceStringFormat("Enter text: ", None, TEST_MAX_SIZE, TEST_MIN_SIZE), f'minSize "{TEST_MAX_SIZE}" cannot be greater than or equal to maxSize "{TEST_MIN_SIZE}" characters long')
 
         # test formatted string
         # with required format
@@ -370,14 +365,14 @@ class TestEnforceFunctions(unittest.TestCase):
             self.assertEqual(enforceStringFormat("Enter text: "), str(TEST_COMPLEX))
 
     def test_enforceBool(self):
-        TEST_INT = 999
-        TEST_FLOAT = 9.99
-        TEST_STRING = 'asdf'
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
         TEST_BOOL_TRUE = True
         TEST_BOOL_FALSE = False
         TEST_BOOL_YES = 'yes'
         TEST_BOOL_NO = 'no'
-        TEST_COMPLEX = '1 + 2j'
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
 
         # test int
         # expect method to reject int as bool
@@ -422,11 +417,11 @@ class TestEnforceFunctions(unittest.TestCase):
 
 
     def test_enforceComplex(self):
-        TEST_INT = 999
-        TEST_FLOAT = 9.99
-        TEST_STRING = 'asdf'
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_STRING = random.choice(string.ascii_letters) * TEST_INT
         TEST_BOOL = True
-        TEST_COMPLEX = "(1 + 2j)"
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
 
         # test int
         # expect method to convert int
@@ -454,9 +449,10 @@ class TestEnforceFunctions(unittest.TestCase):
             self.assertEqual(enforceComplex("Enter text:"), complex(TEST_COMPLEX.replace(" ", "")))
 
     def test_strictEnforceInt(self):
-        TEST_INT = 999
-        MIN_VALUE = 500
-        MAX_VALUE = 1000
+        TEST_INT = random.randint(1, 10)
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
+
         # test int
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_INT)):
@@ -466,25 +462,26 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_INT)):
-            self.assertEqual(strictEnforceInt("Enter text: ", MIN_VALUE), TEST_INT)
+            self.assertEqual(strictEnforceInt("Enter text: ", TEST_MIN_SIZE), TEST_INT)
 
         # test int
         # with max value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_INT)):
-            self.assertEqual(strictEnforceInt("Enter text: ", None, MAX_VALUE), TEST_INT)
+            self.assertEqual(strictEnforceInt("Enter text: ", None, TEST_MAX_SIZE), TEST_INT)
 
         # test int
         # with min and max value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_INT)):
-            self.assertEqual(strictEnforceInt("Enter text: ", MIN_VALUE, MAX_VALUE), TEST_INT)
+            self.assertEqual(strictEnforceInt("Enter text: ", TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_INT)
 
     def test_strictEnforceFloat(self):
-        TEST_FLOAT = 9.999
-        MIN_VALUE = 1
-        MAX_VALUE = 10
-        PRECISION = 2
+        TEST_INT = random.randint(1, 10)
+        TEST_FLOAT = float(TEST_INT) + TEST_INT / 10
+        TEST_MIN_SIZE = TEST_INT - 1
+        TEST_MAX_SIZE = TEST_INT + 1
+        PRECISION = random.randint(1, 10)
 
         # test float
         # expect accept
@@ -495,19 +492,19 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(strictEnforceFloat("Enter text: ", MIN_VALUE), TEST_FLOAT)
+            self.assertEqual(strictEnforceFloat("Enter text: ", TEST_MIN_SIZE), TEST_FLOAT)
 
         # test float
         # with max value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(strictEnforceFloat("Enter text: ", None, MAX_VALUE), TEST_FLOAT)
+            self.assertEqual(strictEnforceFloat("Enter text: ", None, TEST_MAX_SIZE), TEST_FLOAT)
 
         # test float
         # with min and max value
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_FLOAT)):
-            self.assertEqual(strictEnforceFloat("Enter text: ", MIN_VALUE, MAX_VALUE), TEST_FLOAT)
+            self.assertEqual(strictEnforceFloat("Enter text: ", TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_FLOAT)
 
         # test float
         # with precision
@@ -518,8 +515,8 @@ class TestEnforceFunctions(unittest.TestCase):
     def test_strictEnforceStringFormat(self):
         TEST_STRING = 'hello3'
         TEST_REGEX = 'hello[1-9]+'
-        MIN_LENGTH = 2
-        MAX_LENGTH = 10
+        TEST_MIN_SIZE = len(TEST_STRING) - 1
+        TEST_MAX_SIZE = len(TEST_STRING) + 1
 
         # test string
         # expect accept
@@ -536,25 +533,25 @@ class TestEnforceFunctions(unittest.TestCase):
         # with min length
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_STRING)):
-            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, MIN_LENGTH), TEST_STRING)
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, TEST_MIN_SIZE), TEST_STRING)
 
         # test string
         # with max length
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_STRING)):
-            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, None, MAX_LENGTH), TEST_STRING)
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, None, TEST_MAX_SIZE), TEST_STRING)
 
         # test string
         # with min and max length
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_STRING)):
-            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, MIN_LENGTH, MAX_LENGTH), TEST_STRING)
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", None, TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_STRING)
 
         # test string
         # with min, max, regex
         # expect accept
         with mock.patch('builtins.input', return_value=str(TEST_STRING)):
-            self.assertEqual(strictEnforceStringFormat("Enter text: ", TEST_REGEX, MIN_LENGTH, MAX_LENGTH), TEST_STRING)
+            self.assertEqual(strictEnforceStringFormat("Enter text: ", TEST_REGEX, TEST_MIN_SIZE, TEST_MAX_SIZE), TEST_STRING)
 
     def test_strictEnforceBool(self):
         TEST_TRUE = "true"
@@ -571,8 +568,9 @@ class TestEnforceFunctions(unittest.TestCase):
             self.assertEqual(strictEnforceBool("Enter text: "), False)
 
     def test_strictEnforceComplex(self):
-        TEST_COMPLEX = '( 4 + 5j)'
-        RESULT_COMPLEX = complex(4+5j)
+        TEST_INT = random.randint(1, 10)
+        TEST_COMPLEX = f'{TEST_INT} + {TEST_INT}j'
+        RESULT_COMPLEX = complex(TEST_COMPLEX.replace(' ', ''))
 
         # test complex
         # expect accept
