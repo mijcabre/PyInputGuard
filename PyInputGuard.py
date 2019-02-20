@@ -1,4 +1,4 @@
-# TODO: add documentation in README
+#!/usr/bin/env python3
 
 import re
 
