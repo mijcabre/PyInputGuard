@@ -19,7 +19,8 @@ def sizeCheck(testInput, minSize = None, maxSize = None):
         testInputSize = len(testInput)
     else:
         testInputSize = testInput
-    if minSize and maxSize:
+
+    if minSize and maxSize or minSize == 0 and maxSize == 0:
         if minSize >= maxSize:
             return_str = f'minSize "{minSize}" cannot be greater than or equal to maxSize "{maxSize}"'
             if isinstance(testInput, str):
@@ -32,7 +33,7 @@ def sizeCheck(testInput, minSize = None, maxSize = None):
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
-    elif minSize:
+    elif minSize or minSize == 0:
         if testInputSize >= minSize:
             return testInput
         else:
@@ -40,7 +41,7 @@ def sizeCheck(testInput, minSize = None, maxSize = None):
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
-    elif maxSize:
+    elif maxSize or maxSize == 0:
         if testInputSize <= maxSize:
             return testInput
         else:
