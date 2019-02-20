@@ -83,59 +83,6 @@ class TestEnforceFunctions(unittest.TestCase):
         # expect method to return error
         self.assertEqual(sizeCheck(TEST_FLOAT * 1000, None, TEST_MAX_SIZE), f'Input "{TEST_FLOAT * 1000}" is too large. Input must be less than "{TEST_MAX_SIZE + 1}"')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         # test valid string
         # with min and max size correct
         # expect method to return string
