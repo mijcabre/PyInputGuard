@@ -3,7 +3,7 @@
 import re
 
 
-def sizeCheck(testInput, minSize, maxSize):
+def sizeCheck(testInput, minSize = None, maxSize = None):
     """
     Helper method for enforceInt, enforceFloat, enforceStringFormat
     Args:
@@ -21,14 +21,14 @@ def sizeCheck(testInput, minSize, maxSize):
         testInputSize = testInput
     if minSize and maxSize:
         if minSize >= maxSize:
-            return_str = f'minSize {minSize} cannot be greater than or equal to maxSize {maxSize}'
+            return_str = f'minSize "{minSize}" cannot be greater than or equal to maxSize "{maxSize}"'
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
         elif testInputSize >= minSize and testInputSize <= maxSize:
             return testInput
         else:
-            return_str = f'Input "{testInput}" must be between {minSize - 1} and {maxSize + 1}'
+            return_str = f'Input "{testInput}" must be between "{minSize - 1}" and "{maxSize + 1}"'
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
@@ -36,7 +36,7 @@ def sizeCheck(testInput, minSize, maxSize):
         if testInputSize >= minSize:
             return testInput
         else:
-            return_str = f'Input "{testInput}" is too small. Input must be at least {minSize}'
+            return_str = f'Input "{testInput}" is too small. Input must be at least "{minSize}"'
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
@@ -44,7 +44,7 @@ def sizeCheck(testInput, minSize, maxSize):
         if testInputSize <= maxSize:
             return testInput
         else:
-            return_str = f'Input "{testInput}" is too large. Input must be less than {maxSize + 1}'
+            return_str = f'Input "{testInput}" is too large. Input must be less than "{maxSize + 1}"'
             if isinstance(testInput, str):
                 return_str += ' characters long'
             return return_str
